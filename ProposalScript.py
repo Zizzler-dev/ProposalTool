@@ -2,6 +2,7 @@ from re import template
 from docx import Document
 import streamlit as st
 import os
+import io
 
 st.image('zizzl health logo 22.png')
 
@@ -71,8 +72,6 @@ if st.button('SUBMIT'):
             "OOP": Out_of_Pocket,
             "EXAMPLE": Example,
             "GUARDIAN": ''
-
-
         }
 
     template_document = Document(template_file_path)
@@ -87,7 +86,17 @@ if st.button('SUBMIT'):
                     for paragraph in cell.paragraphs:
                         replace_text_in_paragraph(paragraph, variable_key, variable_value)
 
-    template_document.save('Filled_Proposal.docx')
+   # template_document.save('Filled_Proposal.docx')
+    docx_stream = io.BytesIO()
+    template_document.save(docx_stream)
+    docx_bytes = docx_stream.getvalue()
+
+    st.download_button(
+        label = "Download Proposal",
+        data = docx_bytes,
+        file_name = 'Proposal.docx',
+        mime='application/msword'
+    )
 
 
 
