@@ -15,64 +15,60 @@ def replace_text_in_paragraph(paragraph, key, value):
             if key in item.text:
                 item.text = item.text.replace(key, value)
 
-Client = st.text_input('Client')    
+Client = st.text_input('Client/Prospect name')    
 
-Carrier = st.text_input('Carrier')
+Broker = st.text_input('Brokerage Name')
 
-Date = st.text_input('Date')
+Agent = st.text_input('Broker/Consultant Name')
 
-Broker = st.text_input('Broker')
+Date = st.text_input('Date of Proposal')
 
-Agent = st.text_input('Agent')
+Deductible = st.text_input('CSA Benchmark Plan - Deductible')
 
-Deductible = st.text_input('Deductible')
+Out_of_Pocket = st.text_input('CSA Benchmark Plan - MAX Out of Pocket')
 
-Out_of_Pocket = st.text_input('MAX Out of Pocket')
+Carrier = st.text_input('CSA Benchmark Plan - Carrier')
 
-Example = st.text_input('Example Premium for a non-smoking 30- year old in the baseline county')
+Example = st.text_input('CSA Benchmark Plan - Premium for a non-smoking 30- year old in the baseline county')
 
-Website = st.text_input('Website')
+Website = st.text_input('Broker Website')
 
-Email = st.text_input('Email')
+Email = st.text_input('Broker Email')
 
-Phone = st.text_input('Phone')
+Phone = st.text_input('Broker Phone')
 
-template_file_path = 'Proposal.docx'
-output_file_path = 'Downloads/result.docx'
+template_file_path = 'Proposal - Copy.docx'
 
-guardian = st.radio('Guardian', ['Yes', 'No'])
+guardian = st.radio('Will this group utilize Guardian products?', ['Yes', 'No'])
+premier = st.radio('Premier?', ['Yes', 'No'])
 
 if st.button('SUBMIT'):
-    if(guardian == 'Yes'):
-        variables = {
-            "CLIENT NAME": Client,
-            "CARRIER NAME": Carrier,
-            "INSERT DATE HERE": Date, 
-            "BROKER NAME": Broker,
-            "AGENT NAME": Agent,
-            "WEBSITE": Website,
-            "EMAIL": Email,
-            "PHONE": Phone,
-            "DEDUCTIBLE": Deductible,
-            "OOP": Out_of_Pocket,
-            "EXAMPLE": Example,
-            "GUARDIAN": 'Guardian Life Insurance Company product administration, including APIs connecting the systems with ease'
-        }
-    else:
-        variables = {
-            "CLIENT NAME": Client,
-            "CARRIER NAME": Carrier,
-            "INSERT DATE HERE": Date, 
-            "BROKER NAME": Broker,
-            "AGENT NAME": Agent,
-            "WEBSITE": Website,
-            "EMAIL": Email,
-            "PHONE": Phone,
-            "DEDUCTIBLE": Deductible,
-            "OOP": Out_of_Pocket,
-            "EXAMPLE": Example,
-            "GUARDIAN": ''
-        }
+    
+    variables = {
+        "CLIENT NAME": Client,
+        "CARRIER NAME": Carrier,
+        "INSERT DATE HERE": Date, 
+        "BROKER NAME": Broker,
+        "AGENT NAME": Agent,
+        "WEBSITE": Website,
+        "EMAIL": Email,
+        "PHONE": Phone,
+        "DEDUCTIBLE": Deductible,
+        "OOP": Out_of_Pocket,
+        "EXAMPLE": Example,
+        "PREMIER": 'Concierge Team assistance for technical support', 
+        "GUARDIAN": 'Guardian Life Insurance Company product administration, including APIs connecting the systems with ease'
+    }
+
+    if (guardian == 'No'):
+
+        variables['GUARDIAN'] = ''
+    
+    if (premier == 'No'):
+
+        variables['PREMIER'] = ''
+
+
 
     template_document = Document(template_file_path)
 
@@ -86,7 +82,6 @@ if st.button('SUBMIT'):
                     for paragraph in cell.paragraphs:
                         replace_text_in_paragraph(paragraph, variable_key, variable_value)
 
-   # template_document.save('Filled_Proposal.docx')
     docx_stream = io.BytesIO()
     template_document.save(docx_stream)
     docx_bytes = docx_stream.getvalue()
